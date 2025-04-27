@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <nav>
+        <a href="/static/index.html">Login</a> |
+        <a href="/static/create_user.html">Signup</a> |
+        <a href="#" onclick="logout()">Logout</a>
+    </nav>
+
+    <h1>Login</h1>
+    <form id="loginForm">
+        <input type="text" id="email" placeholder="Email" required><br><br>
+        <input type="password" id="password" placeholder="Password" required><br><br>
+        <button type="submit">Login</button>
+    </form>
+    <p id="message"></p>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Details</title>
+</head>
+<body>
+    <nav>
+        <a href="/static/contacts.html">Contacts</a> |
+        <a href="/static/add_contact.html">Add Contact</a> |
+        <a href="/static/profile.html">Profile</a> |
+        <a href="#" onclick="logout()">Logout</a>
+    </nav>
+
+    <h1>Contact Details</h1>
+
+    <div id="contactDetails">
+        <!-- Contact info will load here -->
+    </div>
+
+    <div style="margin-top: 20px;">
+        <button onclick="redirectToNotes()">Add New Note</button>
+        <button onclick="enableEdit()">Edit Contact</button>
+        <button onclick="deleteContact()" style="background-color: red; color: white;">Delete Contact</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Contact</title>
+</head>
+<body>
+    <nav>
+        <a href="/static/contacts.html">Contacts</a> |
+        <a href="/static/add_contact.html">Add Contact</a> |
+        <a href="/static/profile.html">Profile</a> |
+        <a href="#" onclick="logout()">Logout</a>
+    </nav>
+
+    <h1>Add New Contact</h1>
+
+    <form id="contactForm">
+        <input type="text" id="first_name" placeholder="First Name" required><br><br>
+        <input type="text" id="last_name" placeholder="Last Name"><br><br>
+        <input type="text" id="company" placeholder="Company"><br><br>
+        <input type="text" id="emails" placeholder="Emails (comma separated)"><br><br>
+        <input type="text" id="phone_numbers" placeholder="Phone Numbers (comma separated)"><br><br>
+        <input type="text" id="address" placeholder="Address"><br><br>
+        <input type="date" id="birthday" placeholder="Birthday"><br><br>
+        <input type="text" id="username" placeholder="Username"><br><br>
+        <input type="text" id="pronouns" placeholder="Pronouns"><br><br>
+        <textarea id="notes" placeholder="Notes"></textarea><br><br>
+
+        <button type="submit">Create Contact</button>
+    </form>
+
+    <script src="app.js"></script>
+
+    <script>
+    document.getElementById("contactForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const first_name = document.getElementById("first_name").value;
+        const last_name = document.getElementById("last_name").value;
+        const company = document.getElementById("company").value;
+        const emails = document.getElementById("emails").value;
+        const phone_numbers = document.getElementById("phone_numbers").value;
+        const address = document.getElementById("address").value;
+        const birthday = document.getElementById("birthday").value;
+        const username = document.getElementById("username").value;
+        const pronouns = document.getElementById("pronouns").value;
+        const notes = document.getElementById("notes").value;
+
+        createContact(first_name, last_name, company, emails, phone_numbers, address, birthday, username, pronouns, notes)
+        .then(() => {
+            alert("Contact created successfully!");
+            window.location.href = "/static/contacts.html";
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Failed to create contact.");
+        });
+    });
+    </script>
+</body>
+</html>
