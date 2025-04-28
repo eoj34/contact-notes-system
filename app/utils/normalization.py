@@ -2,14 +2,21 @@
 
 def normalize_note_fields(note_data: dict) -> dict:
     """
-    Normalize inbound note fields to ensure 'body' is present.
-    Accepts note_body, note_text alternatives.
+    Normalize inbound note fields to ensure 'title' and 'body' are present.
+    Accepts note_title, note_body, note_text alternatives.
     """
+    # Normalize body
     if "note_body" in note_data and "body" not in note_data:
         note_data["body"] = note_data.pop("note_body")
     if "note_text" in note_data and "body" not in note_data:
         note_data["body"] = note_data.pop("note_text")
+
+    # Normalize title
+    if "note_title" in note_data and "title" not in note_data:
+        note_data["title"] = note_data.pop("note_title")
+    
     return note_data
+
 
 def normalize_contact_fields(contact_data: dict) -> dict:
     """

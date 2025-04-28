@@ -75,7 +75,7 @@ async function loadContacts() {
 // ------------------- CREATE NEW CONTACT -------------------
 async function createContact(
     first_name, last_name, company, emails, phone_numbers,
-    address, birthday, username, pronouns, notes
+    address, birthday, username, notes
 ) {
     const token = localStorage.getItem("token");
 
@@ -94,7 +94,6 @@ async function createContact(
             address: address || "",
             birthday: birthday || "",
             username: username || "",
-            pronouns: pronouns || "",
             notes: notes || ""
         })
     });
@@ -118,17 +117,77 @@ async function loadNotes() {
 
     notes.forEach(note => {
         const li = document.createElement("li");
-        li.innerText = `${new Date(note.timestamp).toLocaleString()}: ${note.body}`;
+        li.innerHTML = `
+            <a href="#" onclick="goToNoteDetail('${note.id}')">
+                ${new Date(note.timestamp).toLocaleString()} - ${note.body.substring(0, 30)}...
+            </a>
+        `;
         noteList.appendChild(li);
     });
 }
 
+function goToNoteDetail(noteId) {
+    localStorage.setItem("selected_note_id", noteId);
+    window.location.href = "/static/note_detail.html";
+}
+
+async function loadNoteDetail() {
+    const token = localStorage.getItem("token");
+    const noteId = localStorage.getItem("selected_note_id");
+
+    const response = await fetch(`${API_URL}/notes/${noteId}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    if (response.ok) {
+        const note = await response.json();
+
+        console.log("Loaded note:", note);  // DEBUGGING
+        console.log("note.title is:", note.title);
+        console.log("note.body is:", note.body);
+        console.log("document.getElementById('note_title'):", document.getElementById("note_title"));
+        console.log("document.getElementById('note_body'):", document.getElementById("note_body"));
+
+        const titleInput = document.getElementById("note_title");
+        const bodyTextarea = document.getElementById("note_body");
+
+        if (titleInput && bodyTextarea) {
+            titleInput.value = note.title || "(No Title)";
+            bodyTextarea.value = note.body || "(No Body)";
+        } else {
+            console.error("Title input or body textarea not found in DOM!");
+        }
+
+        window.currentNoteId = note.id;
+    } else {
+        alert("Failed to load note details.");
+    }
+}
+
+
+
 // ------------------- CREATE NEW NOTE -------------------
-async function createNote(bodyText) {
+async function createNote() {
     const token = localStorage.getItem("token");
     const contactId = localStorage.getItem("selected_contact_id");
+    
+    const noteTitle = document.getElementById("note_title").value.trim();
+    const noteBody = document.getElementById("note_body").value.trim();
 
-    await fetch(`${API_URL}/notes/`, {
+    if (!contactId) {
+        alert("No contact selected! Cannot create note.");
+        return;
+    }
+
+    if (!noteTitle || !noteBody) {
+        alert("Please provide both a title and a body for the note.");
+        return;
+    }
+
+    const response = await fetch(`${API_URL}/notes/`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -136,13 +195,116 @@ async function createNote(bodyText) {
         },
         body: JSON.stringify({
             contact_id: contactId,
-            body: bodyText,
+            title: noteTitle,
+            body: noteBody,
             timestamp: null
         })
     });
 
-    loadNotes();
+    if (response.ok) {
+        alert("Note created!");
+        loadNotes();
+    } else {
+        const errorData = await response.json();  // <-- ADD this line to see server error!
+        console.error("Error creating note:", errorData);
+        alert("Failed to create note.");
+    }
 }
+
+
+
+async function updateNote(noteId) {
+    const token = localStorage.getItem("token");
+    const newBody = document.getElementById("note_body").value;
+
+    const response = await fetch(`${API_URL}/notes/${noteId}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ body: newBody })
+    });
+
+    if (response.ok) {
+        alert("Note updated successfully!");
+        window.location.href = "/static/notes.html";
+    } else {
+        alert("Failed to update note.");
+    }
+}
+
+function enableNoteEditing() {
+    const titleInput = document.getElementById("note_title");
+    const bodyTextarea = document.getElementById("note_body");
+    if (titleInput && bodyTextarea) {
+        titleInput.disabled = false;
+        bodyTextarea.disabled = false;
+    }
+}
+
+async function saveNoteChanges() {
+    const noteId = window.currentNoteId;
+    if (!noteId) {
+        alert("No note selected.");
+        return;
+    }
+
+    const token = localStorage.getItem("token");
+    const title = document.getElementById("note_title").value.trim();
+    const body = document.getElementById("note_body").value.trim();
+
+    if (!title || !body) {
+        alert("Title and body cannot be empty!");
+        return;
+    }
+
+    const response = await fetch(`${API_URL}/notes/${noteId}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ title: title, body: body })
+    });
+
+    if (response.ok) {
+        alert("Note updated successfully!");
+        window.location.reload();
+    } else {
+        alert("Failed to update note.");
+    }
+}
+
+async function deleteCurrentNote() {
+    const noteId = window.currentNoteId;
+    if (!noteId) {
+        alert("No note selected.");
+        return;
+    }
+
+    if (!confirm("Are you sure you want to delete this note?")) {
+        return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`${API_URL}/notes/${noteId}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    if (response.ok) {
+        alert("Note deleted successfully!");
+        window.location.href = "/static/notes.html";
+    } else {
+        alert("Failed to delete note.");
+    }
+}
+
+
 
 // ------------------- LOAD PROFILE -------------------
 async function loadProfile() {
@@ -193,6 +355,9 @@ async function loadProfile() {
 
                 if (saveResponse.ok) {
                     document.getElementById("saveMessage").innerText = "Preference saved!";
+                    setTimeout(() => {
+                        window.location.href = "/static/contacts.html"; // Redirect to contacts page
+                    }, 1000); // slight delay to show message
                 } else {
                     document.getElementById("saveMessage").innerText = "Error saving preference.";
                 }
@@ -225,8 +390,7 @@ async function loadContactDetail() {
             <p><strong>Address:</strong> <input type="text" id="address" value="${contact.address || ""}" disabled></p>
             <p><strong>Birthday:</strong> <input type="date" id="birthday" value="${contact.birthday || ""}" disabled></p>
             <p><strong>Username:</strong> <input type="text" id="username" value="${contact.username || ""}" disabled></p>
-            <p><strong>Pronouns:</strong> <input type="text" id="pronouns" value="${contact.pronouns || ""}" disabled></p>
-            <p><strong>Notes:</strong> <textarea id="notes" disabled>${contact.notes || ""}</textarea></p>
+            <p><strong>Other:</strong> <textarea id="notes" disabled>${contact.notes || ""}</textarea></p>
             <div id="saveEditDiv" style="margin-top: 10px;"></div>
         `;
     } else {
@@ -251,18 +415,52 @@ async function saveContactChanges() {
     const token = localStorage.getItem("token");
     const contactId = localStorage.getItem("selected_contact_id");
 
-    const updatedContact = {
-        first_name: document.getElementById("first_name").value,
-        last_name: document.getElementById("last_name").value,
-        company: document.getElementById("company").value,
-        emails: document.getElementById("emails").value.split(",").map(e => e.trim()),
-        phone_numbers: document.getElementById("phone_numbers").value.split(",").map(p => p.trim()),
-        address: document.getElementById("address").value,
-        birthday: document.getElementById("birthday").value,
-        username: document.getElementById("username").value,
-        pronouns: document.getElementById("pronouns").value,
-        notes: document.getElementById("notes").value
-    };
+    const updatedContact = {};
+
+    const firstName = document.getElementById("first_name").value.trim();
+    if (firstName) updatedContact.first_name = firstName;
+
+    const lastName = document.getElementById("last_name").value.trim();
+    if (lastName) updatedContact.last_name = lastName;
+
+    const company = document.getElementById("company").value.trim();
+    if (company) updatedContact.company = company;
+
+    const emailsInput = document.getElementById("emails").value.trim();
+    if (emailsInput) {
+        const emailsArray = emailsInput.split(",").map(e => e.trim()).filter(e => e);
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const invalidEmails = emailsArray.filter(email => !emailRegex.test(email));
+
+        if (invalidEmails.length > 0) {
+            alert(`Invalid email(s) detected:\n\n${invalidEmails.join(", ")}\n\nPlease correct them before saving.`);
+            return; // Stop the save
+        }
+
+        updatedContact.emails = emailsArray;
+    }
+
+    const phoneNumbers = document.getElementById("phone_numbers").value.trim();
+    if (phoneNumbers) updatedContact.phone_numbers = phoneNumbers.split(",").map(p => p.trim()).filter(p => p);
+
+    const address = document.getElementById("address").value.trim();
+    if (address) updatedContact.address = address;
+
+    const birthday = document.getElementById("birthday").value.trim();
+    if (birthday) updatedContact.birthday = birthday;
+
+    const username = document.getElementById("username").value.trim();
+    if (username) updatedContact.username = username;
+
+    const notes = document.getElementById("notes").value.trim();
+    if (notes) updatedContact.notes = notes;
+
+    if (Object.keys(updatedContact).length === 0) {
+        alert("No changes detected to update!");
+        return;
+    }
 
     const response = await fetch(`${API_URL}/contacts/${contactId}`, {
         method: "PUT",
@@ -277,9 +475,12 @@ async function saveContactChanges() {
         alert("Contact updated successfully!");
         window.location.reload();
     } else {
-        alert("There are no Changes to Update");
+        const errorData = await response.json();
+        console.error("Update error:", errorData);
+        alert("Failed to update contact. Please check your input.");
     }
 }
+
 
 async function deleteContact() {
     const token = localStorage.getItem("token");
@@ -341,15 +542,18 @@ document.addEventListener("DOMContentLoaded", () => {
         loadNotes();
     }
 
+    if (document.getElementById("noteDetails")) {
+        loadNoteDetail();
+    }
+    
     if (document.getElementById("noteForm")) {
         document.getElementById("noteForm").addEventListener("submit", (e) => {
             e.preventDefault();
-            const noteBody = document.getElementById("note_body").value;
-            createNote(noteBody);
-            document.getElementById("note_body").value = "";
+            createNote();
         });
     }
-
+    
+    
     if (document.getElementById("profileInfo")) {
         loadProfile();
     }

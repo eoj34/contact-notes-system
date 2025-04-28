@@ -6,6 +6,7 @@
 <body>
     <nav>
         <a href="/static/contacts.html">Contacts</a> |
+        <a href="/static/add_contact.html">Add Contact</a> |
         <a href="/static/profile.html">Profile</a> |
         <a href="#" onclick="logout()">Logout</a>
     </nav>
@@ -13,14 +14,16 @@
     <h1>Notes for Contact</h1>
     <div id="contactInfo"></div>
 
-    <h2>Add New Note</h2>
-    <form id="noteForm">
-        <textarea id="note_body" placeholder="Write your note here..." required></textarea><br><br>
-        <button type="submit">Add Note</button>
-    </form>
 
     <h2>Existing Notes</h2>
     <ul id="noteList"></ul>
+
+    <h2>Add New Note</h2>
+    <form id="noteForm">
+        <input type="text" id="note_title" placeholder="Note Title" required><br><br>
+        <textarea id="note_body" placeholder="Write your note here..." required></textarea><br><br>
+        <button type="submit">Add Note</button>
+    </form>
 
     <script src="app.js"></script>
 </body>

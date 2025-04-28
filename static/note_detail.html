@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Note Details</title>
+</head>
+<body>
+    <nav>
+        <a href="/static/contacts.html">Contacts</a> |
+        <a href="/static/add_contact.html">Add Contact</a> |
+        <a href="/static/profile.html">Profile</a> |
+        <a href="#" onclick="logout()">Logout</a>
+    </nav>
+
+    <h1>Note Details</h1>
+
+    <div id="noteDetails">
+        <p><strong>Title:</strong> <input type="text" id="note_title" disabled></p>
+        <p><strong>Body:</strong> <textarea id="note_body" rows="10" cols="50" disabled></textarea></p>
+        <div id="noteActions" style="margin-top: 20px;">
+            <button onclick="enableNoteEditing()">Edit Note</button>
+            <button onclick="saveNoteChanges()">Save Changes</button>
+            <button onclick="deleteCurrentNote()" style="background-color: red; color: white;">Delete Note</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

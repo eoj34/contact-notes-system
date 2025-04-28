@@ -23,7 +23,6 @@
         <input type="text" id="address" placeholder="Address"><br><br>
         <input type="date" id="birthday" placeholder="Birthday"><br><br>
         <input type="text" id="username" placeholder="Username"><br><br>
-        <input type="text" id="pronouns" placeholder="Pronouns"><br><br>
         <textarea id="notes" placeholder="Notes"></textarea><br><br>
 
         <button type="submit">Create Contact</button>
@@ -43,10 +42,9 @@
         const address = document.getElementById("address").value;
         const birthday = document.getElementById("birthday").value;
         const username = document.getElementById("username").value;
-        const pronouns = document.getElementById("pronouns").value;
         const notes = document.getElementById("notes").value;
 
-        createContact(first_name, last_name, company, emails, phone_numbers, address, birthday, username, pronouns, notes)
+        createContact(first_name, last_name, company, emails, phone_numbers, address, birthday, username, notes)
         .then(() => {
             alert("Contact created successfully!");
             window.location.href = "/static/contacts.html";
