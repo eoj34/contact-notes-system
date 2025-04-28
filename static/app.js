@@ -72,6 +72,7 @@ async function loadContacts() {
     });
 }
 
+
 // ------------------- CREATE NEW CONTACT -------------------
 async function createContact(
     first_name, last_name, company, emails, phone_numbers,
@@ -167,6 +168,22 @@ async function loadNoteDetail() {
     }
 }
 
+async function loadContactName(contactId) {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`http://localhost:8000/contacts/${contactId}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (response.ok) {
+        const contact = await response.json();
+        const contactName = contact.first_name || "Contact";
+        document.getElementById("contactNameHeader").innerText = `Notes for ${contactName}`;
+    } else {
+        console.error("Failed to load contact info");
+    }
+}
 
 
 // ------------------- CREATE NEW NOTE -------------------
@@ -539,6 +556,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (document.getElementById("noteList")) {
+        const contactId = localStorage.getItem("selected_contact_id");
+        loadContactName(contactId);   // <-- ADD this line
         loadNotes();
     }
 

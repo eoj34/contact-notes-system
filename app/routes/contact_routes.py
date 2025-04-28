@@ -12,6 +12,7 @@ router = APIRouter(
 )
 
 contacts_collection = db.contacts
+notes_collection = db.notes 
 
 def get_current_user(authorization: str = Header(...)):
     try:
@@ -79,7 +80,14 @@ async def update_contact(contact_id: str, contact_update: ContactUpdate, user_id
 
 @router.delete("/{contact_id}")
 async def delete_contact(contact_id: str, user_id: str = Depends(get_current_user)):
+    # Delete the contact
     result = await contacts_collection.delete_one({"_id": ObjectId(contact_id), "user_id": user_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Contact not found")
-    return {"message": "Contact deleted successfully"}
+
+    # Delete all associated notes
+    notes_result = await notes_collection.delete_many({"contact_id": contact_id, "user_id": user_id})
+
+    return {
+        "message": f"Contact and {notes_result.deleted_count} associated notes deleted successfully"
+    }
