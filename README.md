@@ -1,4 +1,4 @@
-A simple Contact + Notes Management system, built with FastAPI, MongoDB, and vanilla HTML/JS frontend.
+This is a Contact + Notes Management system, built with FastAPI, MongoDB, and vanilla HTML/JS frontend.
 This project supports user signup/login, JWT-based authentication, contact management, note management, and frontend interaction.
 
 Features
@@ -20,32 +20,44 @@ JWT (Authentication using JSON Web Tokens)
 Pydantic (Schema validation)
 Uvicorn (ASGI Server)
 
+How to Run This Project Locally: 
 
-How to Run Locally:
-
-Clone the Repository:
-git clone https://github.com/your-username/contact-notes-system.git
+1. Clone the Repository
+git clone https://github.com/eoj34/contact-notes-system.git
 cd contact-notes-system
 
-Set up a Python Virtual Environment:
-python3 -m venv venv
-source venv/bin/activate   # (or venv\Scripts\activate on Windows)
+3. Set up a Python Virtual Environment
+   
+macOS:
 
-Install Dependencies:
+python3 -m venv venv
+source venv/bin/activate
+
+Windows:
+
+python -m venv venv
+venv\Scripts\activate
+
+4. Install Dependencies
 pip install -r requirements.txt
 
-Ensure MongoDB is Running Locally:
-By default, the app connects to:
+5. Ensure MongoDB is Running Locally
+   
+The app connects to:
 mongodb://localhost:27017
-You must have MongoDB running locally (brew services start mongodb-community on Mac, or through MongoDB Compass)
 
-Run the Application:
-source venv/bin/activate   
+You must have MongoDB running on your system locally or use your MongoDB cluster by replacing line 4 in database.py
+
+6. Run the Application:
 uvicorn app.main:app --reload
+(May have to run: source venv/bin/activate before)
 
-Access the Frontend
-Visit http://localhost:8000/static/index.html
+7. Access the Frontend
+   
+Open this URL in your browser:
+http://localhost:8000/static/index.html
 
-Explore API Docs:
-FastAPI automatically provides Swagger UI docs at:
+8. Explore the API Docs
+FastAPI provides automatic docs:
+
 http://localhost:8000/docs
