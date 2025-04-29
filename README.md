@@ -22,11 +22,11 @@ Uvicorn (ASGI Server)
 
 How to Run This Project Locally: 
 
-1. Clone the Repository
+1. Clone the Repository:
 git clone https://github.com/eoj34/contact-notes-system.git
 cd contact-notes-system
 
-3. Set up a Python Virtual Environment
+3. Set up a Python Virtual Environment:
    
 macOS:
 
@@ -38,10 +38,10 @@ Windows:
 python -m venv venv
 venv\Scripts\activate
 
-4. Install Dependencies
+4. Install Dependencies: 
 pip install -r requirements.txt
 
-5. Ensure MongoDB is Running Locally
+5. Ensure MongoDB is Running Locally:
    
 The app connects to:
 mongodb://localhost:27017
@@ -52,12 +52,12 @@ You must have MongoDB running on your system locally or use your MongoDB cluster
 uvicorn app.main:app --reload
 (May have to run: source venv/bin/activate before)
 
-7. Access the Frontend
+7. Access the Frontend:
    
 Open this URL in your browser:
 http://localhost:8000/static/index.html
 
-8. Explore the API Docs
+8. Explore the API Docs:
 FastAPI provides automatic docs:
 
 http://localhost:8000/docs
