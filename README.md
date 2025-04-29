@@ -85,9 +85,9 @@ The user running the application will have access to a local or cloud MongoDB in
 
 What I Would Improve With More Time:
 
-1.I would add Unit and Integration Testing.
-2.I would use an event bus for notes.
-3.I would add the ability to perform CRUD operations on users without having to manually do It via the database. This would allow users to edit their password/email or delate their account. 
-4.I would also build a more detailed frontend. The frontend has a lot of scope for refinement. 
-5.I would also add the ability for users to favorite certain contacts. 
+1. I would add Unit and Integration Testing.
+2. I would use an event bus for notes.
+3. I would add the ability to perform CRUD operations on users without having to manually do It via the database. This would allow users to edit their password/email or delate their account. 
+4. I would also build a more detailed frontend. The frontend has a lot of scope for refinement. 
+5. I would also add the ability for users to favorite certain contacts. 
 
