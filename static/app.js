@@ -17,7 +17,7 @@ async function signup(email, password) {
     if (response.status === 200) {
         document.getElementById("signupMessage").innerText = "Account created! You can now login.";
     } else {
-        document.getElementById("signupMessage").innerText = data.detail || "Signup failed.";
+        document.getElementById("signupMessage").innerText = "Error";
     }
 }
 
@@ -222,7 +222,7 @@ async function createNote() {
         alert("Note created!");
         loadNotes();
     } else {
-        const errorData = await response.json();  // <-- ADD this line to see server error!
+        const errorData = await response.json();  
         console.error("Error creating note:", errorData);
         alert("Failed to create note.");
     }
@@ -557,7 +557,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (document.getElementById("noteList")) {
         const contactId = localStorage.getItem("selected_contact_id");
-        loadContactName(contactId);   // <-- ADD this line
+        loadContactName(contactId);   
         loadNotes();
     }
 

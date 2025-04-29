@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional, List
-from datetime import datetime  # <-- Needed for created_at
+from datetime import datetime  
 
 class Contact(BaseModel):
     id: Optional[str]

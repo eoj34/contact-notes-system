@@ -30,11 +30,11 @@ async def create_contact(contact: ContactCreate, user_id: str = Depends(get_curr
     contact_data["user_id"] = user_id
     contact_data["created_at"] = datetime.utcnow()
 
-    print("About to insert contact:", contact_data)  # <-- ADD THIS
+    print("About to insert contact:", contact_data)  
 
     result = await contacts_collection.insert_one(contact_data)
 
-    print("Insert result:", result.inserted_id)  # <-- ADD THIS
+    print("Insert result:", result.inserted_id)  
 
     contact_data["id"] = str(result.inserted_id)
     return Contact(**contact_data)
@@ -67,7 +67,7 @@ async def get_contact(contact_id: str, user_id: str = Depends(get_current_user))
 @router.put("/{contact_id}", response_model=Contact)
 async def update_contact(contact_id: str, contact_update: ContactUpdate, user_id: str = Depends(get_current_user)):
     update_data = {k: v for k, v in contact_update.dict().items() if v is not None}
-    update_data = normalize_contact_fields(update_data)  # <-- Normalize update data
+    update_data = normalize_contact_fields(update_data)  
     result = await contacts_collection.find_one_and_update(
         {"_id": ObjectId(contact_id), "user_id": user_id},
         {"$set": update_data},

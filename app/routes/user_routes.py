@@ -44,8 +44,8 @@ async def update_profile_sort_preference(data: dict, user_id: str = Depends(get_
     )
     return {"message": "Preference updated"}
 
-# (Optional) If you have a signup route, normalize user input there
-@router.post("/signup")
-async def signup(user_data: dict):
-    user_data = normalize_user_fields(user_data)
+
+#@router.post("/signup")
+#async def signup(user_data: dict):
+   # user_data = normalize_user_fields(user_data)
     # continue saving user_data into users_collection

@@ -5,16 +5,16 @@ from datetime import datetime
 class Note(BaseModel):
     id: Optional[str]
     contact_id: str  
-    title: str        # <-- ADD this
+    title: str        
     body: str
     timestamp: datetime
 
 class NoteCreate(BaseModel):
     contact_id: str
-    title: str        # <-- ADD this
+    title: str        
     body: str
     timestamp: Optional[datetime] = None
 
 class NoteUpdate(BaseModel):
-    title: Optional[str] = None   # <-- ADD this
+    title: Optional[str] = None   
     body: Optional[str] = None
